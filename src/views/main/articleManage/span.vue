@@ -139,6 +139,7 @@ type QueryParams = {
   name?: string | undefined
   currentPage: number | undefined
   pageSize: number | undefined
+  status?: string | undefined
 }
 
 type Form = {
@@ -146,6 +147,8 @@ type Form = {
   name: string
   remark: string
   articleNum?: number
+  description: string
+  status?: string | undefined
 }
 
 let queryParams = reactive<QueryParams>({
@@ -156,7 +159,9 @@ let queryParams = reactive<QueryParams>({
 let form = reactive<Form>({
   id: undefined,
   name: undefined,
-  remark: undefined
+  remark: undefined,
+  description: undefined,
+  status: undefined
   // articleNum:undefined
 })
 
@@ -226,7 +231,7 @@ let resetForm = () => {
   form.id = undefined
   form.name = undefined
   form.description = undefined
-  form.staus = '0'
+  form.status = '0'
 }
 
 //一页显示数量改变

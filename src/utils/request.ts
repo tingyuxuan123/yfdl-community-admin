@@ -6,11 +6,13 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores/userStore'
 import router from '@/router'
-export const baseURL: string = 'http://127.0.0.1:8989/'
+import { baseURL, TIME_OUT } from '@/api/config/index'
+import { ElMessage } from 'element-plus'
+// export const baseURL = 'http://127.0.0.1:8989/'
 
 const instance = axios.create({
   baseURL,
-  timeout: 5000
+  timeout: TIME_OUT
 })
 
 instance.interceptors.request.use(

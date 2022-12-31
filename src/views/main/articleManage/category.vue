@@ -103,7 +103,7 @@ import {
   Download,
   RefreshLeft
 } from '@element-plus/icons-vue'
-import { getAllCategoryDetailList } from '@/api/category'
+import { getAllCategoryList } from '@/api/category'
 
 let form = reactive<{
   status: '0' | '1' | ''
@@ -120,10 +120,14 @@ let categoryList = reactive<
 let addViewVisible = ref(false)
 
 //编辑
-let handleEdit = (index: any, row: any) => {}
+let handleEdit = (index: any, row: any) => {
+  console.log()
+}
 
 //删除
-let handleDelete = (index: any, row: any) => {}
+let handleDelete = (index: any, row: any) => {
+  console.log()
+}
 
 //一页显示数量改变
 const handleSizeChange = (val: number) => {
@@ -132,16 +136,19 @@ const handleSizeChange = (val: number) => {
 
 //当前页改变
 const handleCurrentChange = (val: number) => {
+  console.log()
   //console.log(`current page: ${val}`)
 }
 
 //添加分类
-const addCategory = () => {}
-
-const queryAllCategoryDetailList = async () => {
-  const res = await getAllCategoryDetailList()
-  // console.log(res);
+const addCategory = () => {
+  console.log()
 }
+
+// const queryAllCategoryDetailList = async () => {
+//   const res = await getAllCategoryDetailList()
+//   // console.log(res);
+// }
 
 // queryAllCategoryDetailList();
 </script>

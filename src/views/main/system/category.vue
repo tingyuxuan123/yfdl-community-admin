@@ -138,7 +138,7 @@ import {
   RefreshLeft
 } from '@element-plus/icons-vue'
 import {
-  getAllCategoryDetailList,
+  getAllCategoryList,
   insertCategory,
   updateCategory,
   deleteCategory
@@ -260,7 +260,7 @@ let handleAdd = () => {
 
 const queryCategoryListByParams = async () => {
   loading.value = true
-  const res = await getAllCategoryDetailList(queryParams)
+  const res = await getAllCategoryList()
   categoryList.value = res.data.rows
   pageInfo.total = res.data.total
 

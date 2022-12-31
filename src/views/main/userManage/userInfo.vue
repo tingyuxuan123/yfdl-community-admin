@@ -74,6 +74,7 @@
 import { reactive, ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { updateInfo, updatePassword } from '@/api/user'
+import { ElMessage } from 'element-plus'
 
 const userStore = useUserStore()
 

@@ -66,7 +66,7 @@
           <el-col :span="12">
             <el-form-item label="缩略图">
               <el-upload
-                v-model:file-list="thumbnails"
+                :file-list="thumbnails"
                 :limit="1"
                 name="img"
                 :http-request="handleUpload"
@@ -123,7 +123,7 @@ import { queryArticleInfo, updateArticle, insertArticle } from '@/api/article'
 import { getAllCategoryList } from '@/api/category'
 import { getAllTagList } from '@/api/tag'
 import { uploadImg } from '@/api/upload'
-import type { UploadFile, UploadFiles } from 'element-plus'
+import { ElMessage, UploadFile, UploadFiles } from 'element-plus'
 
 const route = useRoute()
 
@@ -164,7 +164,8 @@ let tagList = ref<Array<{ id: number; name: string }>>([])
 //文章id 有说明是更新 ，没有说明是发布
 let aId = ref(null)
 
-let thumbnails = ref<Array<Record<string, any>>>([])
+// let thumbnails = ref<Array<Record<string, any>>>([])
+let thumbnails = ref<UploadFiles>([])
 
 if (route.query && route.query.aid) {
   aId.value = route.query.aid
@@ -183,7 +184,13 @@ if (route.query && route.query.aid) {
       return tag.id
     })
 
-    thumbnails.value.push({ name: '缩略图', url: data.thumbnail })
+    // thumbnails.value.push({ name: '缩略图', url: data.thumbnail })
+    thumbnails.value.push({
+      uid: 1,
+      name: '缩略图',
+      url: data.thumbnail,
+      status: 'success'
+    })
   })
 }
 
@@ -293,7 +300,7 @@ const handleUpload = async (img: any) => {
 
 //超过限制
 const onExceed = () => {
-  ElMessage(route, {
+  ElMessage({
     showClose: true,
     message: '图片个数超过限制！',
     type: 'warning'
