@@ -1,18 +1,13 @@
 <template>
   <el-breadcrumb separator-icon="ArrowRightBold">
-    <el-breadcrumb-item>所在位置：首页</el-breadcrumb-item>
-    <el-breadcrumb-item
-      v-for="item in routerStore.topbarRouters"
-      :key="item.title"
-      >{{ item.title }}</el-breadcrumb-item
-    >
-    <!-- <el-breadcrumb-item>promotion list</el-breadcrumb-item>
-    <el-breadcrumb-item>promotion detail</el-breadcrumb-item> -->
+    <el-breadcrumb-item v-for="item in topbar" :key="item.title">{{
+      item.title
+    }}</el-breadcrumb-item>
   </el-breadcrumb>
 </template>
 
 <script lang="ts" setup name="breadcrumb">
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRoutesStore } from '@/stores/routesStore'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -20,30 +15,29 @@ let route = useRoute()
 
 let routerStore = useRoutesStore()
 
-let links = route.fullPath.split('/') //获取路径
-links.shift()
-links.shift()
 let routers: any = routerStore.routes
-let topbar = []
-// const setbreadcrumb=()=>{  //动态生成路径
-//     links.forEach((item,index)=>{
-//         console.log(routerStore.routes);
+console.log(routers)
 
-//         routers.forEach(element => {
-//                 // if(element)
-//             if(item==element.path){
-//                 topbar.push({title:element.meta.title,path:element.path})
-//                 routers=routers.children
-//             }
+const topbar: any = computed(() => {
+  let breadcrumb = []
+  const pathArray = route.path.split('/')
+  const pathName = pathArray[pathArray.length - 1]
 
-//             });
-//     })
+  for (const menu of routers) {
+    if (pathName === menu.path) {
+      breadcrumb.push({ title: menu.meta.title, path: menu.path })
+    } else {
+      menu.children?.forEach((submenu: any) => {
+        if (pathName === submenu.path) {
+          breadcrumb.push({ title: menu.meta.title, path: menu.path })
+          breadcrumb.push({ title: submenu.meta.title, path: submenu.path })
+        }
+      })
+    }
+  }
 
-//     routerStore.topbarRouters=topbar;
-
-// }
-
-// setbreadcrumb()
+  return breadcrumb
+})
 </script>
 
 <style scoped lang="less"></style>

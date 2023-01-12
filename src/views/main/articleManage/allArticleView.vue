@@ -84,7 +84,7 @@
           </el-table-column>
           <el-table-column label="标签">
             <template #default="scope">
-              <template v-for="item in scope.row.tags">
+              <template v-for="item in scope.row.tags" :key="item.id">
                 <el-tag class="tagSpan">{{ item.name }}</el-tag>
               </template>
             </template>
@@ -104,23 +104,28 @@
             </template>
           </el-table-column>
           <el-table-column prop="createTime" label="发布时间" />
-          <el-table-column label="操作">
+          <el-table-column
+            align="center"
+            label="操作"
+            class-name="small-padding fixed-width"
+          >
             <template #default="scope">
               <el-button
                 size="small"
+                type="primary"
+                text
+                icon="Edit"
                 @click="handleEdit(scope.$index, scope.row)"
+                >修改</el-button
               >
-                编辑
-              </el-button>
-
-              <el-popconfirm
-                title="是否确认删除"
+              <el-button
+                size="small"
+                type="danger"
+                text
+                icon="Delete"
                 @confirm="handleDelete(scope.$index, scope.row)"
+                >删除</el-button
               >
-                <template #reference>
-                  <el-button size="small" type="danger">删除</el-button>
-                </template>
-              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>

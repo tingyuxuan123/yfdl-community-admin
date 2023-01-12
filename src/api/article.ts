@@ -38,3 +38,7 @@ export const deleteArticle = (id: number) => {
     id
   })
 }
+
+export const getArticleAuditListApi = (queryParams: any) => {
+  return request('/article/articleAuditList', 'get', { ...queryParams })
+}

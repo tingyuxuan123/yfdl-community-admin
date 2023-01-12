@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 </script>
 
 <template>
-  <RouterView></RouterView>
+  <div class="app">
+    <el-config-provider :locale="zhCn">
+      <router-view></router-view>
+    </el-config-provider>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.app {
+  width: 100vw;
+  height: 100vh;
+}
+</style>

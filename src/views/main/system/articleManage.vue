@@ -75,7 +75,7 @@
           </el-table-column>
           <el-table-column label="标签">
             <template #default="scope">
-              <template v-for="item in scope.row.tags">
+              <template v-for="item in scope.row.tags" :key="item.id">
                 <el-tag class="tagSpan">{{ item.name }}</el-tag>
               </template>
             </template>
@@ -227,12 +227,14 @@ let handleDelete = async (index: any, row: any) => {
 
 //一页显示数量改变
 const handleSizeChange = (val: number) => {
-  // console.log(`${val} items per page`)
+  pageinfo.pageSize = val
+  queryAll()
 }
 
 //当前页改变
 const handleCurrentChange = (val: number) => {
-  // console.log(`current page: ${val}`)
+  pageinfo.currentPage = val
+  queryAll()
 }
 
 const toWrite = () => {
@@ -279,5 +281,9 @@ const toWrite = () => {
 
 .tagSpan {
   margin-right: 5px;
+}
+
+.el-table {
+  min-height: calc(100% - 100px);
 }
 </style>

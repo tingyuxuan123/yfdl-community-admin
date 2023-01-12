@@ -52,10 +52,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="是否置顶">
-              <el-radio-group v-model="article.isTop">
-                <el-radio :key="'0'" :label="'0'">否</el-radio>
-                <el-radio :key="'1'" :label="'1'">是</el-radio>
+            <el-form-item label="是否发布">
+              <el-radio-group v-model="article.status">
+                <el-radio :key="'0'" :label="'0'">发布</el-radio>
+                <el-radio :key="'1'" :label="'1'">草稿</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -87,12 +87,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="是否发布">
-              <el-radio-group v-model="article.status">
-                <el-radio :key="'0'" :label="'0'">发布</el-radio>
-                <el-radio :key="'1'" :label="'1'">草稿</el-radio>
+            <!-- <el-form-item label="是否置顶">
+              <el-radio-group v-model="article.isTop">
+                <el-radio :key="'0'" :label="'0'">否</el-radio>
+                <el-radio :key="'1'" :label="'1'">是</el-radio>
               </el-radio-group>
-            </el-form-item>
+            </el-form-item> -->
           </el-col>
           <el-col :span="6">
             <el-form-item>
@@ -103,16 +103,15 @@
             <el-form-item> </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <mavon-editor
-            ref="md"
-            v-model="article.content"
-            @imgAdd="addImg"
-            style="width: 100%; height: 480px"
-          />
-        </el-row>
+        <el-row> </el-row>
       </el-form>
     </div>
+    <mavon-editor
+      ref="md"
+      v-model="article.content"
+      @imgAdd="addImg"
+      class="editor"
+    />
   </div>
 </template>
 
@@ -322,7 +321,6 @@ const onExceed = () => {
   border-radius: 6px;
   cursor: pointer;
   position: relative;
-
   overflow: hidden;
 }
 
@@ -343,5 +341,9 @@ const onExceed = () => {
   width: 178px;
   height: 178px;
   display: block;
+}
+.editor {
+  width: 100%;
+  height: calc(100vh - 420px) !important;
 }
 </style>

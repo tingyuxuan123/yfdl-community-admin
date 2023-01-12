@@ -12,7 +12,7 @@ export const getAllCategoryList = () => {
  * 返回所有的分类详细版本
  * @returns 所有的分类
  */
-export const getAllTagDetailList = (queryParams: any) => {
+export const getAllCategoryDetailList = (queryParams: any) => {
   return request('/category/allCategoryDetailList', 'get', {
     ...queryParams
   })

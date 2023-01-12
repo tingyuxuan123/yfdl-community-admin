@@ -34,8 +34,6 @@ const props = withDefaults(defineProps<Props>(), {
 watch(
   () => props.count,
   (newVal, oldVal) => {
-    console.log(newVal)
-
     gsap.to(data, {
       duration: 1,
       tweenedNumber: newVal,

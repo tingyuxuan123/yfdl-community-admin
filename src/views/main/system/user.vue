@@ -45,7 +45,7 @@
       <el-row style="margin-top: 20px">
         <el-table
           :data="userList"
-          max-height="400"
+          min-height="400"
           style="width: 100%"
           v-loading="loading"
           row-key="id"
@@ -100,8 +100,8 @@
       <el-row>
         <div class="pagination-block">
           <el-pagination
-            :currentPage="1"
-            :page-size="10"
+            :currentPage="queryParams.currentPage"
+            :page-size="queryParams.pageSize"
             :page-sizes="[10, 20, 30, 40]"
             layout="total, sizes, prev, pager, next, jumper"
             :total="pageInfo.total"
@@ -146,13 +146,14 @@
                   v-for="role in roleList"
                   :label="role.roleName"
                   :value="role.id"
+                  :key="role.id"
                 />
               </el-select>
             </el-form-item>
           </el-col>
           <!-- <el-col :span="12">
-      <el-form-item label="用户密码" label-width="80px"> 
-          <el-input v-model="form.password"></el-input>  
+      <el-form-item label="用户密码" label-width="80px">
+          <el-input v-model="form.password"></el-input>
       </el-form-item>
     </el-col> -->
         </el-row>
@@ -176,10 +177,10 @@
         </el-row>
         <el-row :gutter="20">
           <!-- <el-col :span="12">
-      <el-form-item label="角色权限" label-width="80px"> 
+      <el-form-item label="角色权限" label-width="80px">
         <el-select v-model="form.roleId" placeholder="请选择">
           <el-option v-for="role in roleList" :label="role.roleName" :value="role.id" />
-       
+
         </el-select>
       </el-form-item>
     </el-col> -->
@@ -297,12 +298,14 @@ getuserList()
 
 //一页显示数量改变
 const handleSizeChange = (val: number) => {
-  // console.log(`${val} items per page`)
+  queryParams.value.pageSize = val
+  getuserList()
 }
 
 //当前页改变
 const handleCurrentChange = (val: number) => {
-  // console.log(`current page: ${val}`)
+  queryParams.value.currentPage = val
+  getuserList()
 }
 
 const getRoleListbySelect = async () => {
@@ -357,5 +360,8 @@ const updateStatusByUserId = async (status: string, row: any) => {
   height: 100%;
   padding: 15px;
   box-sizing: border-box;
+}
+.el-table_ {
+  min-height: calc(100% - 100px);
 }
 </style>

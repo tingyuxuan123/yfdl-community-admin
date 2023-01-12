@@ -5,9 +5,9 @@ import router from './router'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 import 'virtual:svg-icons-register'
 import './assets/styles/base.css'
-
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import piniaPluginPersist from 'pinia-plugin-persistedstate'
+import 'element-plus/dist/index.css'
 
 const store = createPinia()
 store.use(piniaPluginPersist) //使用持久化

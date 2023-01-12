@@ -94,7 +94,7 @@
               >
               <el-button
                 size="small"
-                type="primary"
+                type="danger"
                 text
                 icon="Delete"
                 @click="handleDelete(scope.row)"

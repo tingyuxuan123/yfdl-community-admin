@@ -38,12 +38,7 @@
       </el-row>
 
       <el-row style="margin-top: 20px">
-        <el-table
-          :data="categoryList"
-          max-height="400"
-          style="width: 100%"
-          v-loading="loading"
-        >
+        <el-table :data="categoryList" style="width: 100%" v-loading="loading">
           <el-table-column align="center" type="selection" width="100" />
           <el-table-column align="center" type="index" label="id" width="100" />
           <el-table-column align="center" prop="name" label="标签名" />
@@ -78,7 +73,7 @@
               >
               <el-button
                 size="small"
-                type="primary"
+                type="danger"
                 text
                 icon="Delete"
                 @click="handleDelete(scope.row)"
@@ -92,8 +87,8 @@
       <el-row>
         <div class="pagination-block">
           <el-pagination
-            :currentPage="1"
-            :page-size="10"
+            :currentPage="queryParams.currentPage"
+            :page-size="queryParams.pageSize"
             :page-sizes="[10, 20, 30, 40]"
             layout="total, sizes, prev, pager, next, jumper"
             :total="pageInfo.total"
@@ -236,12 +231,14 @@ let resetForm = () => {
 
 //一页显示数量改变
 const handleSizeChange = (val: number) => {
-  // console.log(`${val} items per page`)
+  queryParams.pageSize = val
+  queryCategoryListByParams()
 }
 
 //当前页改变
 const handleCurrentChange = (val: number) => {
-  //console.log(`current page: ${val}`)
+  queryParams.currentPage = val
+  queryCategoryListByParams()
 }
 
 let handleAdd = () => {
@@ -280,5 +277,9 @@ const updateStatusByUserId = async (status: string, row: any) => {
 
 .pagination-block {
   margin-top: 15px;
+}
+
+.el-table {
+  min-height: calc(100% - 100px);
 }
 </style>

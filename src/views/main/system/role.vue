@@ -18,7 +18,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
           <el-button type="primary" :icon="Search" @click="handleSearch"
             >搜索</el-button
           >
@@ -39,7 +39,6 @@
       <el-row style="margin-top: 20px">
         <el-table
           :data="roleList"
-          height="250"
           style="width: 100%"
           v-loading="loading"
           row-key="id"
@@ -85,7 +84,7 @@
                 @confirm="handleDelete(scope.row)"
               >
                 <template #reference>
-                  <el-button size="small" type="primary" text icon="Delete"
+                  <el-button size="small" type="danger" text icon="Delete"
                     >删除</el-button
                   >
                 </template>
@@ -134,13 +133,15 @@
         </el-form-item>
         <el-form-item label="菜单权限" label-width="80px">
           <el-tree-select
-            v-model="form.roleMenu"
+            ref="treeselect"
+            v-model="selectkeys"
             :data="menuOptions"
             multiple
             :render-after-expand="false"
-            :check-strictly="true"
             show-checkbox
+            @check="handleCheckChange"
           />
+          <!-- :check-strictly="true" -->
         </el-form-item>
         <el-form-item label="备注" label-width="80px">
           <el-input v-model="form.remark" type="textarea" :rows="3" />
@@ -167,7 +168,7 @@ import {
 import { reactive, ref } from 'vue'
 import { getRoleList, insertRole, updateRole, deleteRole } from '@/api/role'
 import { getRouters } from '@/api/user'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElTreeSelect } from 'element-plus'
 
 let queryParams = ref<Record<string, any>>({
   currentPage: 1,
@@ -208,10 +209,34 @@ let handleUpdate = (row: any) => {
   form.roleKey = row.roleKey
   form.roleSort = row.roleSort
   form.status = row.status
-  form.roleMenu = row.roleMenu
+  selectkeys.value = filterFatherKeys(row.roleMenu)
   form.remark = row.remark
   form.id = row.id
   ViewVisible.value = true
+}
+
+//过滤父加减
+const filterFatherKeys = (keys: any[]) => {
+  let fid = menuList
+    .filter((menus) => {
+      if (menus.children.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    })
+    .map((menus) => {
+      return menus.id
+    })
+
+  const result = keys.filter((item) => {
+    if (fid.indexOf(item) === -1) {
+      return true
+    }
+  })
+  console.log(result)
+
+  return result
 }
 
 let menuOptions = ref<Array<Record<string, any>>>([])
@@ -255,10 +280,11 @@ const getroleList = async () => {
 
 getroleList()
 
+let menuList = []
 const getRouterList = async () => {
   loading.value = true
   const res: any = await getRouters()
-  let menuList = res.data.menus
+  menuList = res.data.menus
   loading.value = false
 
   getTreeselect(menuList)
@@ -276,6 +302,18 @@ const getTreeselect = (menuList) => {
 
   menuOptions.value.push(...menu.children)
 }
+let selectkeys = ref([])
+const handleCheckChange = () => {
+  console.log('点击')
+
+  const halfkeys = treeselect.value.getHalfCheckedKeys()
+  const fullkeys = treeselect.value.getCheckedKeys()
+  console.log([...halfkeys, ...fullkeys])
+
+  form.roleMenu = [...halfkeys, ...fullkeys]
+}
+
+const treeselect = ref<InstanceType<typeof ElTreeSelect>>()
 
 const getTree = (children: Array<Record<string, any>>) => {
   let reChildren = []
@@ -298,14 +336,15 @@ const getTree = (children: Array<Record<string, any>>) => {
 
 //一页显示数量改变
 const handleSizeChange = (val: number) => {
-  // console.log(`${val} items per page`)
+  queryParams.value.pageSize = val
+  getroleList()
 }
 
 //当前页改变
 const handleCurrentChange = (val: number) => {
-  // console.log(`current page: ${val}`)
+  queryParams.value.currentPage = val
+  getroleList()
 }
-
 //提交
 const submit = async () => {
   // console.log(form);
@@ -351,5 +390,8 @@ const updateStatusByUserId = async (status: string, row: any) => {
   height: 100%;
   padding: 15px;
   box-sizing: border-box;
+}
+.el-table {
+  min-height: calc(100% - 100px);
 }
 </style>
