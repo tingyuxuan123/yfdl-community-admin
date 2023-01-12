@@ -1,6 +1,6 @@
 <template>
   <div class="CommentAudit">
-    <el-form :model="queryParams">
+    <!-- <el-form :model="queryParams">
       <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item label="用户名称">
@@ -25,7 +25,7 @@
           <el-button :icon="RefreshLeft" @click="handleReset">重置</el-button>
         </el-col>
       </el-row>
-    </el-form>
+    </el-form> -->
   </div>
 </template>
 

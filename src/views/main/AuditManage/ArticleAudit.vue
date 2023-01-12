@@ -31,11 +31,11 @@
       :data="articleAuditList"
       style="width: 100%"
       :border="true"
-      v-loading="loading"
       row-key="id"
       :default-expand-all="false"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
+      <!-- v-loading="loading"-->
       <el-table-column
         prop="id"
         label="ID"
@@ -89,7 +89,8 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" width="80" align="center">
-        <template #default="scope">
+        <template>
+          <!--#default="scope"-->
           <el-button :icon="Search" type="success" circle />
         </template>
       </el-table-column>
@@ -107,8 +108,16 @@ import {
   RefreshLeft
 } from '@element-plus/icons-vue'
 import { getArticleAuditListApi } from '@/api/article'
+import type { type } from 'os'
 
-const queryParams = reactive({
+type QueryParams = {
+  currentPage: number
+  pageSize: number
+  userName?: string
+  audit?: number
+}
+
+const queryParams = reactive<QueryParams>({
   currentPage: 1,
   pageSize: 10
 })
@@ -123,7 +132,12 @@ const getArticleAuditList = async () => {
 
 getArticleAuditList()
 
-const handleSearch = () => {}
+const handleSearch = () => {
+  console.log('')
+}
+const handleReset = () => {
+  console.log('')
+}
 </script>
 
 <style scoped lang="scss">
