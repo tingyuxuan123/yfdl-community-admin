@@ -304,11 +304,11 @@ const getTreeselect = (menuList) => {
 }
 let selectkeys = ref([])
 const handleCheckChange = () => {
-  console.log('点击')
+  // console.log('点击')
 
   const halfkeys = treeselect.value.getHalfCheckedKeys()
   const fullkeys = treeselect.value.getCheckedKeys()
-  console.log([...halfkeys, ...fullkeys])
+  // console.log([...halfkeys, ...fullkeys])
 
   form.roleMenu = [...halfkeys, ...fullkeys]
 }

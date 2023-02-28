@@ -41,6 +41,11 @@
         <el-table :data="categoryList" style="width: 100%" v-loading="loading">
           <el-table-column align="center" type="selection" width="100" />
           <el-table-column align="center" type="index" label="id" width="100" />
+          <el-table-column align="center" prop="articleCount" label="图标">
+            <template #default="scope">
+              <img :src="scope.row.spanIcon" class="icon" alt="" />
+            </template>
+          </el-table-column>
           <el-table-column align="center" prop="name" label="标签名" />
           <el-table-column align="center" prop="remark" label="备注" />
           <el-table-column align="center" prop="articleCount" label="文章篇数">
@@ -89,7 +94,7 @@
           <el-pagination
             :currentPage="queryParams.currentPage"
             :page-size="queryParams.pageSize"
-            :page-sizes="[10, 20, 30, 40]"
+            :page-sizes="[8, 16, 24, 32]"
             layout="total, sizes, prev, pager, next, jumper"
             :total="pageInfo.total"
             @size-change="handleSizeChange"
@@ -103,6 +108,21 @@
       <el-form :model="form">
         <el-form-item label="标签名" label-width="60px">
           <el-input v-model="form.name" />
+        </el-form-item>
+        <el-form-item label="图标" label-width="60px">
+          <el-upload
+            :file-list="spanIconList"
+            :limit="1"
+            name="img"
+            :http-request="handleUpload"
+            :auto-upload="true"
+            list-type="picture-card"
+            :on-exceed="onExceed"
+          >
+            <el-icon>
+              <Plus />
+            </el-icon>
+          </el-upload>
         </el-form-item>
         <el-form-item label="备注" label-width="60px">
           <el-input v-model="form.remark" type="textarea" :rows="5" />
@@ -128,7 +148,24 @@ import {
   RefreshLeft
 } from '@element-plus/icons-vue'
 import { getAllTagDetailList, insertTag, updateTag, deleteTag } from '@/api/tag'
-import { ElMessage } from 'element-plus'
+import {
+  ElBadge,
+  ElButton,
+  ElCol,
+  ElDialog,
+  ElForm,
+  ElFormItem,
+  ElIcon,
+  ElInput,
+  ElMessage,
+  ElPagination,
+  ElRow,
+  ElTable,
+  ElTableColumn,
+  ElUpload,
+  UploadFiles
+} from 'element-plus'
+import { uploadImg } from '@/api/upload'
 
 type QueryParams = {
   name?: string | undefined
@@ -140,6 +177,7 @@ type QueryParams = {
 type Form = {
   id?: number
   name: string
+  spanIcon: string
   remark: string
   articleNum?: number
   description: string
@@ -148,12 +186,13 @@ type Form = {
 
 let queryParams = reactive<QueryParams>({
   currentPage: 1,
-  pageSize: 10
+  pageSize: 8
 })
 
 let form = reactive<Form>({
   id: undefined,
   name: undefined,
+  spanIcon: undefined,
   remark: undefined,
   description: undefined,
   status: undefined
@@ -174,6 +213,15 @@ let handleUpdate = (row: any) => {
   form.id = row.id
   form.name = row.name
   form.description = row.description
+  form.spanIcon = row.spanIcon
+  spanIconList.value = [
+    {
+      uid: 1,
+      name: '缩略图',
+      url: row.spanIcon,
+      status: 'success'
+    }
+  ]
   ViewVisible.value = true
 }
 
@@ -264,13 +312,43 @@ const updateStatusByUserId = async (status: string, row: any) => {
     type: 'success'
   })
 }
+
+/**
+ *图片相关
+ */
+
+let spanIconList = ref<UploadFiles>([])
+
+//图片上传
+const handleUpload = async (img: any) => {
+  const res: Record<string, any> = await uploadImg(img.file)
+
+  if (res.code == 200) {
+    form.spanIcon = res.data
+  } else {
+    ElMessage({
+      showClose: true,
+      message: '图片选择失败，请重新选择',
+      type: 'warning'
+    })
+  }
+}
+
+//超过限制
+const onExceed = () => {
+  ElMessage({
+    showClose: true,
+    message: '图片个数超过限制！',
+    type: 'warning'
+  })
+}
 </script>
 
 <style scoped lang="less">
 .span {
   background: #fff;
   width: 100%;
-  height: 100%;
+
   padding: 15px;
   box-sizing: border-box;
 }
@@ -281,5 +359,11 @@ const updateStatusByUserId = async (status: string, row: any) => {
 
 .el-table {
   min-height: calc(100% - 100px);
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
 }
 </style>

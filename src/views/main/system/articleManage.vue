@@ -10,14 +10,7 @@
             ></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="4">
-          <el-form-item label="文章状态">
-            <el-select v-model="form.status" placeholder="请选择文章状态">
-              <el-option label="正常" :value="0" />
-              <el-option label="禁用" :value="1" />
-            </el-select>
-          </el-form-item>
-        </el-col>
+
         <el-col :span="5">
           <el-form-item label="分类目录">
             <el-select v-model="form.categoryId" placeholder="请选择">
@@ -44,30 +37,29 @@
         </el-col>
       </el-row>
 
-      <el-row :gutter="0">
-        <el-button :icon="Plus" type="primary" plain @click="toWrite()"
-          >添加</el-button
-        >
-        <el-button :icon="Delete" type="danger" plain>回收站</el-button>
-      </el-row>
-
       <el-row style="margin-top: 20px">
         <el-table :data="articleList" height="100%" style="width: 100%">
-          <el-table-column type="selection" width="50" />
+          <!-- <el-table-column type="selection" width="50" /> -->
+          <el-table-column prop="thumbnail" label="封面" width="130px">
+            <template #default="scope">
+              <img class="thumbnai" :src="scope.row.thumbnail" alt="" />
+            </template>
+          </el-table-column>
           <el-table-column
             prop="title"
             label="标题"
             :show-overflow-tooltip="true"
+            width="280px"
           />
 
-          <el-table-column label="状态" width="100">
+          <!-- <el-table-column label="状态" width="100">
             <template #default="scope">
               <span v-if="scope.row.status == 1"
                 ><i class="point_cg"></i>草稿箱</span
               >
               <span v-else><i class="point_fb"></i>已发布</span>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column prop="categoryName" label="分类" width="150px">
             <template #default="scope">
               <el-tag>{{ scope.row.categoryName }}</el-tag>
@@ -94,24 +86,17 @@
               />
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="发布时间" />
-          <el-table-column label="操作">
+          <el-table-column prop="createTime" label="发布时间" align="center" />
+          <el-table-column label="操作" align="center">
             <template #default="scope">
               <el-button
                 size="small"
-                @click="handleEdit(scope.$index, scope.row)"
-              >
-                编辑
-              </el-button>
-
-              <el-popconfirm
-                title="是否确认删除"
+                type="danger"
+                text
+                icon="Delete"
                 @confirm="handleDelete(scope.$index, scope.row)"
+                >下架</el-button
               >
-                <template #reference>
-                  <el-button size="small" type="danger">删除</el-button>
-                </template>
-              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -122,7 +107,7 @@
           <el-pagination
             :currentPage="pageinfo.currentPage"
             :page-size="pageinfo.pageSize"
-            :page-sizes="[10, 20, 30, 40]"
+            :page-sizes="[7, 14, 21, 28]"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total"
             @size-change="handleSizeChange"
@@ -143,7 +128,11 @@ import {
   Download,
   RefreshLeft
 } from '@element-plus/icons-vue'
-import { queryArticleList, deleteArticle } from '@/api/article'
+import {
+  queryArticleList,
+  deleteArticle,
+  queryAllArticleList
+} from '@/api/article'
 import { getAllCategoryList } from '@/api/category'
 import { getAllTagList } from '@/api/tag'
 import { useRouter } from 'vue-router'
@@ -153,7 +142,7 @@ let articleList = ref([])
 
 let pageinfo = reactive({
   currentPage: 1,
-  pageSize: 10
+  pageSize: 7
 })
 
 let router = useRouter()
@@ -163,19 +152,17 @@ let total = ref(0)
 
 const form = reactive<{
   title: string
-  status: '0' | '1' | ''
   categoryId: number
   spanId: number
 }>({
   title: '',
-  status: '',
   categoryId: null,
   spanId: null
 })
 
 const queryAll = async () => {
   //查询文章
-  const res = await queryArticleList(form, pageinfo)
+  const res = await queryAllArticleList(form, pageinfo)
   articleList.value = res.data.rows
   total.value = res.data.total
 }
@@ -191,10 +178,9 @@ const getAllTags = async () => {
 }
 
 const reset = () => {
-  ;(form.title = ''),
-    (form.status = ''),
-    (form.categoryId = null),
-    (form.spanId = null)
+  form.title = ''
+  form.categoryId = null
+  form.spanId = null
   queryAll()
 }
 
@@ -285,5 +271,10 @@ const toWrite = () => {
 
 .el-table {
   min-height: calc(100% - 100px);
+}
+
+.thumbnai {
+  width: 100px;
+  height: 60px;
 }
 </style>

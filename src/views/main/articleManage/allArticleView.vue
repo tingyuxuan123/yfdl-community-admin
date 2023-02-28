@@ -5,7 +5,7 @@
         <el-col :span="6">
           <el-form-item label="关键词">
             <el-input
-              placeholder="请输入分类名"
+              placeholder="请输入标题内容"
               v-model="form.title"
             ></el-input>
           </el-form-item>
@@ -13,8 +13,8 @@
         <el-col :span="4">
           <el-form-item label="文章状态">
             <el-select v-model="form.status" placeholder="请选择文章状态">
-              <el-option label="正常" :value="0" />
-              <el-option label="禁用" :value="1" />
+              <el-option label="已发布" :value="0" />
+              <el-option label="草稿箱" :value="1" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -52,7 +52,7 @@
         <el-button :icon="Plus" type="primary" plain @click="toWrite()">
           添加
         </el-button>
-        <el-button :icon="Delete" type="danger" plain>回收站</el-button>
+        <!-- <el-button :icon="Delete" type="danger" plain>回收站</el-button> -->
       </el-row>
 
       <el-row style="margin-top: 20px">
@@ -63,6 +63,11 @@
           v-loading="loading"
         >
           <el-table-column type="selection" width="50" />
+          <el-table-column prop="thumbnail" label="封面" width="130px">
+            <template #default="scope">
+              <img class="thumbnai" :src="scope.row.thumbnail" alt="" />
+            </template>
+          </el-table-column>
           <el-table-column
             prop="title"
             label="标题"
@@ -71,10 +76,28 @@
 
           <el-table-column label="状态" width="100">
             <template #default="scope">
-              <span v-if="scope.row.status == 1"
-                ><i class="point_cg"></i>草稿箱</span
+              <span v-if="scope.row.status === '1'">
+                <i class="point_cg"></i>
+                草稿箱
+              </span>
+              <span
+                v-else-if="scope.row.status === '0' && scope.row.audit === 0"
               >
-              <span v-else><i class="point_fb"></i>已发布</span>
+                <i class="point_fb"></i>
+                已发布
+              </span>
+              <span
+                v-else-if="scope.row.status === '0' && scope.row.audit === 1"
+              >
+                <i class="point_await"></i>
+                待审核
+              </span>
+              <span
+                v-else-if="scope.row.status === '0' && scope.row.audit === 2"
+              >
+                <i class="point_field"></i>
+                审核失败
+              </span>
             </template>
           </el-table-column>
           <el-table-column prop="categoryName" label="分类" width="150px">
@@ -100,10 +123,11 @@
                 :value="scope.row.viewCount"
                 class="item"
                 type="primary"
+                :max="99999"
               />
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="发布时间" />
+          <!-- <el-table-column prop="createTime" label="发布时间" /> -->
           <el-table-column
             align="center"
             label="操作"
@@ -136,7 +160,7 @@
           <el-pagination
             :currentPage="pageinfo.currentPage"
             :page-size="pageinfo.pageSize"
-            :page-sizes="[10, 20, 30, 40]"
+            :page-sizes="[7, 14, 21, 28]"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total"
             @size-change="handleSizeChange"
@@ -167,7 +191,7 @@ let articleList = ref([])
 
 let pageinfo = reactive({
   currentPage: 1,
-  pageSize: 10
+  pageSize: 7
 })
 
 let router = useRouter()
@@ -243,12 +267,14 @@ let handleDelete = async (index: any, row: any) => {
 
 //一页显示数量改变
 const handleSizeChange = (val: number) => {
-  // console.log(`${val} items per page`)
+  pageinfo.pageSize = val
+  queryAll()
 }
 
 //当前页改变
 const handleCurrentChange = (val: number) => {
-  // console.log(`current page: ${val}`)
+  pageinfo.currentPage = val
+  queryAll()
 }
 
 const toWrite = () => {
@@ -293,7 +319,34 @@ const toWrite = () => {
   top: -2px;
 }
 
+.point_field {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: red;
+  display: inline-block;
+  margin-right: 8px;
+  position: relative;
+  top: -2px;
+}
+
+.point_await {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: #4093ff;
+  display: inline-block;
+  margin-right: 8px;
+  position: relative;
+  top: -2px;
+}
+
 .tagSpan {
   margin-right: 5px;
+}
+
+.thumbnai {
+  width: 100px;
+  height: 60px;
 }
 </style>

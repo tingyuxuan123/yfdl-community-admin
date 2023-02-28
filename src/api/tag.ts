@@ -31,3 +31,7 @@ export const deleteTag = (id: number) => {
     id
   })
 }
+
+export const articleInfoByTag = () => {
+  return request('/tag/articleInfoByTag', 'get')
+}

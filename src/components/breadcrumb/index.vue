@@ -16,7 +16,7 @@ let route = useRoute()
 let routerStore = useRoutesStore()
 
 let routers: any = routerStore.routes
-console.log(routers)
+// console.log(routers)
 
 const topbar: any = computed(() => {
   let breadcrumb = []

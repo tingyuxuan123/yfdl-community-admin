@@ -31,3 +31,7 @@ export const insertUser = (form: any) => {
     ...form
   })
 }
+
+export const userArticleInfo = () => {
+  return request('/user/userArticleInfo', 'get')
+}

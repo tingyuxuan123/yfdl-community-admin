@@ -85,7 +85,7 @@ const handleSendCodeClick = async () => {
       }, 1000)
 
       const result = await sendEmail(emailLogin.email)
-      console.log(result)
+      // console.log(result)
     }
   })
 }

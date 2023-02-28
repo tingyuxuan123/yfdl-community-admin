@@ -32,8 +32,18 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', //ip地址
     port: 5174, //端口号
-    open: true //启动后是否自动打开浏览器
+    open: true, //启动后是否自动打开浏览器
+    proxy: {
+      // 本地开发环境通过代理实现跨域，生产环境使用 nginx 转发
+      // 正则表达式写法
+      '/getRoundImg': {
+        target: 'https://tuapi.eees.cc/api.php?type=json&category=biying', // 后端服务实际地址
+        changeOrigin: true, //开启代理
+        rewrite: (path) => path.replace(/^\/getRoundImg/, '')
+      }
+    }
   }
+
   // css:{
   //   preprocessorOptions:{
   //     less:{

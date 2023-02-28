@@ -82,17 +82,19 @@
               </el-upload>
 
               <el-dialog v-model="dialogVisible">
-                <img w-full :src="dialogImageUrl" alt="Preview Image" />
+                <img
+                  w-full
+                  style="width: 100%"
+                  :src="dialogImageUrl"
+                  alt="Preview Image"
+                />
               </el-dialog>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <!-- <el-form-item label="是否置顶">
-              <el-radio-group v-model="article.isTop">
-                <el-radio :key="'0'" :label="'0'">否</el-radio>
-                <el-radio :key="'1'" :label="'1'">是</el-radio>
-              </el-radio-group>
-            </el-form-item> -->
+            <el-button type="primary" @click="HandleRoundImg"
+              >随机缩略图</el-button
+            >
           </el-col>
           <el-col :span="6">
             <el-form-item>
@@ -116,13 +118,14 @@
 </template>
 
 <script lang="ts" setup name="writeView">
-import { reactive, ref, watchEffect, watch } from 'vue'
+import { reactive, ref, watchEffect, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { queryArticleInfo, updateArticle, insertArticle } from '@/api/article'
 import { getAllCategoryList } from '@/api/category'
 import { getAllTagList } from '@/api/tag'
 import { uploadImg } from '@/api/upload'
 import { ElMessage, UploadFile, UploadFiles } from 'element-plus'
+import { getRoundImg } from '@/api/img'
 
 const route = useRoute()
 
@@ -256,6 +259,18 @@ const handleSubmit = async () => {
     // console.log(res);
   } else {
     //添加
+
+    if (article.summary == '' || article.summary == null) {
+      //不写摘要默认填充内容
+      article.summary = md.value.d_render.replace(
+        /(?<=<pre>)[\s\S]*?(?=<\/pre>)/gi,
+        ''
+      )
+      article.summary = article.summary.replace(/<[^>]+>/g, '')
+      article.summary = article.summary.replace(/\s/g, '')
+      article.summary = article.summary.slice(0, 80)
+    }
+
     let res: any = await insertArticle(article)
 
     if (res.code == 200) {
@@ -295,6 +310,21 @@ const handleUpload = async (img: any) => {
       type: 'warning'
     })
   }
+}
+
+//随机图片
+const HandleRoundImg = async () => {
+  const result = await getRoundImg()
+  article.thumbnail = result.data.img
+
+  thumbnails.value = [
+    {
+      uid: 1,
+      name: '缩略图',
+      url: result.data.img,
+      status: 'success'
+    }
+  ]
 }
 
 //超过限制

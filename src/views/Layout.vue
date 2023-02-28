@@ -37,8 +37,8 @@ let menuStore = usemenuStore()
 
 .el-main {
   width: 100%;
-  height: 100%;
-  overflow: hidden;
+  height: calc(100vh - 200px);
+  overflow: auto;
   background-color: #f0f2f5;
 }
 </style>
