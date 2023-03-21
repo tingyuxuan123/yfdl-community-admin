@@ -4,11 +4,11 @@
     <div class="tabs">
       <!-- 账号登录 -->
       <el-tabs type="border-card" v-model="activeName" stretch>
-        <el-tab-pane label="帐号管理" name="account">
+        <el-tab-pane label="密码登录" name="account">
           <template #label>
             <span class="account-tabs-label">
               <el-icon><UserFilled /></el-icon>
-              <span>帐号管理</span>
+              <span>密码登录</span>
             </span>
           </template>
           <pane-account ref="accountRef"></pane-account>

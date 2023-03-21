@@ -94,7 +94,7 @@
           <el-pagination
             :currentPage="queryParams.currentPage"
             :page-size="queryParams.pageSize"
-            :page-sizes="[8, 16, 24, 32]"
+            :page-sizes="[7, 14, 21, 28]"
             layout="total, sizes, prev, pager, next, jumper"
             :total="pageInfo.total"
             @size-change="handleSizeChange"
@@ -186,7 +186,7 @@ type Form = {
 
 let queryParams = reactive<QueryParams>({
   currentPage: 1,
-  pageSize: 8
+  pageSize: 7
 })
 
 let form = reactive<Form>({

@@ -149,7 +149,7 @@ let article = reactive<articleInfo>({
   categoryId: null,
   thumbnail: null,
   isTop: '0',
-  status: null,
+  status: '1',
   isComment: '1',
   tags: []
 })
@@ -238,6 +238,9 @@ watch(
 
 //保存或更新
 const handleSubmit = async () => {
+  //对提交的数据进行校验
+  let isPass = beforeSubmit()
+  if (!isPass) return
   if (aId.value != null) {
     //为更新
 
@@ -286,6 +289,31 @@ const handleSubmit = async () => {
         type: 'warning'
       })
     }
+  }
+}
+
+const beforeSubmit = () => {
+  let message = null
+
+  if (article.title == '' || article.title == null) {
+    message = '标题不能为空'
+  } else if (article.categoryId == null) {
+    message = '分类不能为空'
+  } else if (article.tags.length <= 0) {
+    message = '标签不能为空'
+  } else if (article.content == null || article.content == '') {
+    message = '内容不能为空'
+  }
+
+  if (message != null) {
+    ElMessage({
+      showClose: true,
+      message,
+      type: 'warning'
+    })
+    return false
+  } else {
+    return true
   }
 }
 

@@ -147,7 +147,7 @@
                 type="danger"
                 text
                 icon="Delete"
-                @confirm="handleDelete(scope.$index, scope.row)"
+                @click="handleDelete(scope.$index, scope.row)"
                 >删除</el-button
               >
             </template>
@@ -186,6 +186,7 @@ import { getAllCategoryList } from '@/api/category'
 import { getAllTagList } from '@/api/tag'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { log } from 'console'
 
 let articleList = ref([])
 
@@ -255,6 +256,8 @@ let handleEdit = (index: any, row: any) => {
 
 //删除
 let handleDelete = async (index: any, row: any) => {
+  console.log(row.id, '3434')
+
   await deleteArticle(row.id)
 
   ElMessage({

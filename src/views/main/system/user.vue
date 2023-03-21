@@ -11,10 +11,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="5">
-          <el-form-item label="手机号码">
+          <el-form-item label="邮箱">
             <el-input
-              placeholder="请输入手机号码"
-              v-model="queryParams.phonenumber"
+              placeholder="请输入邮箱"
+              v-model="queryParams.email"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -59,7 +59,7 @@
           />
           <el-table-column align="center" prop="userName" label="角色名称" />
           <el-table-column align="center" prop="nickName" label="用户昵称" />
-          <el-table-column align="center" prop="phonenumber" label="手机号码" />
+          <el-table-column align="center" prop="email" label="邮箱" />
           <el-table-column align="center" prop="status" label="状态">
             <template #default="scope">
               <el-switch
@@ -278,7 +278,7 @@ const handleSearch = () => {
 
 const handleReset = () => {
   queryParams.value.phonenumber = undefined
-  queryParams.value.userName = undefined
+  queryParams.value.email = undefined
   queryParams.value.status = undefined
   getuserList()
 }

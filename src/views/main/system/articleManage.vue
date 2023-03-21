@@ -94,7 +94,7 @@
                 type="danger"
                 text
                 icon="Delete"
-                @confirm="handleDelete(scope.$index, scope.row)"
+                @click="handleDelete(scope.$index, scope.row)"
                 >下架</el-button
               >
             </template>
@@ -128,11 +128,7 @@ import {
   Download,
   RefreshLeft
 } from '@element-plus/icons-vue'
-import {
-  queryArticleList,
-  deleteArticle,
-  queryAllArticleList
-} from '@/api/article'
+import { getarticleAuditApi, queryAllArticleList } from '@/api/article'
 import { getAllCategoryList } from '@/api/category'
 import { getAllTagList } from '@/api/tag'
 import { useRouter } from 'vue-router'
@@ -199,13 +195,14 @@ let handleEdit = (index: any, row: any) => {
   })
 }
 
-//删除
+//下架
 let handleDelete = async (index: any, row: any) => {
-  await deleteArticle(row.id)
+  // await deleteArticle(row.id)
+  await getarticleAuditApi(row.id, 2)
 
   ElMessage({
     showClose: true,
-    message: '删除成功',
+    message: '下架成功',
     type: 'success'
   })
   queryAll() //更新文章
